@@ -283,14 +283,25 @@ class CrosswordCreator():
         for value in self.order_domain_values(var, assignment):
             # assign this value to assignment
             assignment[var] = value
-            # check consistency of tentative assignment
+            # initialize var to save domains for neighbors
+            save_domains = {}
+            # check if assignment consistent
             if self.consistent(assignment):
-                result = self.backtrack(assignment)
-                # if result valid return it
-                if result:
-                    return result
-            # not consistent - remove from assignment
+                # if so, now enforce arc consistency for neighbors but save
+                # copy of each neighbor domain first to undo if necessary
+                # n_all is all neighbors
+                n_all = self.crossword.neighbors(var)
+                save_domains = {n: self.domains[n].copy() for n in n_all}
+                arcs = set((z, var) for z in n_all)
+                if self.ac3(arcs):
+                    result = self.backtrack(assignment)
+                    # if result valid return it
+                    if result:
+                        return result
+            # not consistent - remove assignment and restore neighbor domains
             assignment.pop(var)
+            for n, domain in save_domains.items():
+                self.domains[n] = domain
         # we've tried all in domain, return None
         return None    
         
