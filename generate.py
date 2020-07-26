@@ -135,7 +135,6 @@ class CrosswordCreator():
                 xwords.remove(xword)
         return xwords
 
-    
     def revise(self, x, y):
         """
         Make variable `x` arc consistent with variable `y`.
@@ -158,7 +157,6 @@ class CrosswordCreator():
         if revised:
             self.domains[x] = new_xwords
         return revised
-        
 
     def ac3(self, arcs=None):
         """
@@ -183,7 +181,6 @@ class CrosswordCreator():
                 arcs = arcs.union(set((z, x) for z in (self.crossword.neighbors(x) - {y})))
         return True
 
-
     def assignment_complete(self, assignment):
         """
         Return True if `assignment` is complete (i.e., assigns a value to each
@@ -193,7 +190,6 @@ class CrosswordCreator():
             return True
         else:
             return False
-
 
     def consistent(self, assignment):
         """
@@ -219,7 +215,6 @@ class CrosswordCreator():
                         if nword[o[0]] != word[o[1]]:
                             return False
         return True
-
 
     def order_domain_values(self, var, assignment):
         """
@@ -248,7 +243,6 @@ class CrosswordCreator():
         # when done, sort by ruled_out number and return
         return sorted(self.domains[var], key=lambda word: ruled_out[word])
 
-
     def select_unassigned_variable(self, assignment):
         """
         Return an unassigned variable not already part of `assignment`.
@@ -265,10 +259,9 @@ class CrosswordCreator():
         # degree of each var
         deg = {v: len(self.crossword.neighbors(v)) for v in vars}
         # sort primary ascending by num_vals and then descending by degree
-        s = sorted(sorted(vars, key = lambda d: deg[d], reverse=True), 
+        s = sorted(sorted(vars, key=lambda d: deg[d], reverse=True), 
                    key=lambda n: num_vals[n])
         return s[0]
-
 
     def backtrack(self, assignment):
         """
